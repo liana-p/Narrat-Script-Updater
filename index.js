@@ -29,31 +29,41 @@ const replaceRoll = generateReplacer(
   (match) => `if (roll ${match[1]} ${match[2]} ${match[3]}):`
 );
 const simpleCondition = generateReplacer(
-  () => /\$if (?:this\.)*([\w\.]*) *([><=]*) *(?:this\.)*([\w\.]*)/gm,
+  () => /\$if (!*(?:this\.)*[\w\.]*) *([><=!&|]*) *(!*(?:this\.)*[\w\.]*)/gm,
   -1,
   (match) => {
     if (match.length < 1) {
       return false;
     }
-    let firstArg = match[1];
+    let firstArg = handleNot(removeThisKeyword(match[1]));
     let operand = match[2];
     if (operand === "===") {
       operand = "==";
     }
     if (usesVariable(firstArg)) {
-      firstArg = `$${firstArg}`;
+      firstArg = `${firstArg}`;
     }
     if (!match[3]) {
       return `if ${firstArg}:`;
     }
-    let lastArg = match[3];
+    let lastArg = handleNot(removeThisKeyword(match[3]));
     if (usesVariable(lastArg)) {
-      lastArg = `$${lastArg}`;
+      lastArg = `${lastArg}`;
     }
     return `if (${operand} ${firstArg} ${lastArg}):`;
   }
 );
 
+function removeThisKeyword(match) {
+  return match.replace('this.', '$');
+}
+
+function handleNot(match) {
+  if (match.search('!') === 0) {
+    return `(! ${match.substr(1)})`;
+  }
+  return match;
+}
 function usesVariable(match) {
   const keywords = ["quests", "items", "data", "stats"];
   for (const keyword of keywords) {
@@ -105,6 +115,6 @@ async function runAllScripts() {
   }
 }
 
-const testLine = `"let's make choices cause I like making choices!" $if this.data.likeChoices: // A choice can have a condition so it only appears in the list if the condition is met`;
-// console.log(simpleCondition(testLine));
-runAllScripts();
+const testLine = `"let's make choices cause I like making choices!" $if !this.data.likeChoices && test: // A choice can have a condition so it only appears in the list if the condition is met`;
+console.log(simpleCondition(testLine));
+// runAllScripts();

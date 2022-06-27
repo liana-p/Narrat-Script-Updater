@@ -16,7 +16,7 @@ function generateReplacer(regexFunc, size, matcher) {
       if (match && (match.length == size || size === -1)) {
         const matcherRes = matcher(match);
         if (matcherRes) {
-          return (result += matcher(match));
+          return (`${result}${matcher(match)}${line.substr(pos + match[0].length)}`);
         }
       }
     }
@@ -24,12 +24,12 @@ function generateReplacer(regexFunc, size, matcher) {
   };
 }
 const replaceRoll = generateReplacer(
-  () => /\$if this\.roll\("(\w*)", "(\w*)", (\d*)/g,
+  () => /\$if this\.roll\("(\w*)", "(\w*)", (\d*)\):?/g,
   4,
   (match) => `if (roll ${match[1]} ${match[2]} ${match[3]}):`
 );
 const simpleCondition = generateReplacer(
-  () => /\$if (!*(?:this\.)*[\w\.]*) *([><=!&|]*) *(!*(?:this\.)*[\w\.]*)/gm,
+  () => /\$if (!*(?:this\.)*[\w\.]*) *([><=!&|]*) *(!*(?:this\.)*[\w\.]*):?/gm,
   -1,
   (match) => {
     if (match.length < 1) {
@@ -115,6 +115,6 @@ async function runAllScripts() {
   }
 }
 
-const testLine = `"let's make choices cause I like making choices!" $if !this.data.likeChoices && test: // A choice can have a condition so it only appears in the list if the condition is met`;
-console.log(simpleCondition(testLine));
-// runAllScripts();
+const testLine = `"let's make choices cause I like making choices!" $if this.roll("hello", "test", 40): // A choice can have a condition so it only appears in the list if the condition is met`;
+// console.log(simpleCondition(replaceRoll(testLine)));
+runAllScripts();

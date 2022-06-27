@@ -1,0 +1,11 @@
+{
+  "name": "narrat-script-updater",
+  "version": "1.0.0",
+  "description": "Package to update narrat scripts from 1.x to 2.x",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Liana Pigeot",
+  "license": "MIT"
+}

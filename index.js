@@ -29,7 +29,7 @@ const replaceRoll = generateReplacer(
   (match) => `if (roll ${match[1]} ${match[2]} ${match[3]}):`
 );
 const simpleCondition = generateReplacer(
-  () => /\$if (!*(?:this\.)*[\w\.]*) *([><=!&|]*) *(!*(?:this\.)*[\w\.]*):?/gm,
+  () => /\$if (!?"?(?:this\.)*[\w\.]*"?) *([><=!&|]*) *(!*"?(?:this\.)*[\w\.]*"?):?/gm,
   -1,
   (match) => {
     if (match.length < 1) {
@@ -115,6 +115,6 @@ async function runAllScripts() {
   }
 }
 
-const testLine = `"let's make choices cause I like making choices!" $if this.roll("hello", "test", 40): // A choice can have a condition so it only appears in the list if the condition is met`;
+const testLine = `"let's make choices cause I like making choices!" $if this.quests.something.state == "unlocked": // A choice can have a condition so it only appears in the list if the condition is met`;
 // console.log(simpleCondition(replaceRoll(testLine)));
 runAllScripts();

@@ -4,8 +4,8 @@ Script that tries to update narrat script syntax (especially relating to how con
 
 **Make a backup before running!!!!**
 
-1. Place your scripts in the scripts folder
+1. Paste your scripts in the scripts folder (they can be in recursive folders)
 2. Run `npm install`
-3. Run `node index.js`, it will go through and update your scripts.
+3. Run `npm start`, it will go through and update all your scripts.
 
 Preferable, give a look at the before-after diff on git to see if there are any issues and fix advanced cases the script couldn't fix

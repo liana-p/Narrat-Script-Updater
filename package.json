@@ -2,9 +2,10 @@
   "name": "narrat-script-updater",
   "version": "1.0.0",
   "description": "Package to update narrat scripts from 1.x to 2.x",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --experimental-modules index.js"
   },
   "author": "Liana Pigeot",
   "license": "MIT"
